@@ -29,4 +29,51 @@ FONT = SimpleNamespace()
 CFONT = SimpleNamespace()
 SCALE = 1.0
 
+def C(name):
+    return COLORS[name]
 
+
+def P():
+    mode = 1 if ctk.get_appearance_mode() == "Dark" else 0
+    return {name: pair[mode] for name, pair in COLORS.items()}
+
+
+def px(size):
+    """Scale measurements used by the plain Tk canvas and table."""
+    return round(size * SCALE)
+
+
+def setup_fonts(root):
+    global SCALE
+    SCALE = ctk.ScalingTracker.get_widget_scaling(root)
+
+    mono = "Consolas" if sys.platform.startswith("win") else "TkFixedFont"
+    if mono == "TkFixedFont":
+        mono = font.nametofont(mono, root=root).actual("family")
+    FONT.title = ctk.CTkFont(size=20, weight="bold")
+    FONT.bold = ctk.CTkFont(size=14, weight="bold")
+    FONT.ui = ctk.CTkFont(size=14)
+    FONT.small = ctk.CTkFont(size=12)
+    FONT.mono = ctk.CTkFont(family=mono, size=13)
+
+    family = FONT.ui.cget("family")
+    CFONT.ui = font.Font(root=root, family=family, size=-px(13))
+    CFONT.bold = font.Font(root=root, family=family, size=-px(13), weight="bold")
+
+
+def style_tables(root):
+    p = P()
+    style = ttk.Style(root)
+    style.theme_use("clam")
+    style.configure(
+        "Result.Treeview", background=p["card"], fieldbackground=p["card"],
+        foreground=p["text"], font=CFONT.ui, bordercolor=p["border"],
+        rowheight=CFONT.ui.metrics("linespace") + px(14),
+    )
+    style.configure(
+        "Result.Treeview.Heading", background=p["soft"], foreground=p["text"],
+        font=CFONT.bold, padding=(px(4), px(6)),
+    )
+    style.map("Result.Treeview", background=[("selected", p["accent_soft"])],
+              foreground=[("selected", p["text"])])
+    style.map("Result.Treeview.Heading", background=[("active", p["accent_soft"])])

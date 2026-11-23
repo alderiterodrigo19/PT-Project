@@ -81,7 +81,7 @@ class PriorityApp(ctk.CTk):
 
         header = ctk.CTkFrame(self, fg_color=C("card"), corner_radius=0)
         header.pack(fill="x")
-        ctk.CTkLabel(header, text="Topic 1 · CPU Scheduling with Priority",
+        ctk.CTkLabel(header, text="Smart CPU Scheduler",
                      font=FONT.title, text_color=C("text")).pack(side="left", padx=18, pady=12)
         self.dark = tk.BooleanVar(master=self, value=False)
         ctk.CTkSwitch(header, text="Dark mode", variable=self.dark, command=self.toggle_dark,
@@ -132,7 +132,7 @@ class PriorityApp(ctk.CTk):
 
         ctk.CTkLabel(card, text="ID   AT   BT   Priority", font=FONT.bold,
                      text_color=C("accent_text")).pack(anchor="w", padx=10)
-        ctk.CTkLabel(card, text="One process per line. Use spaces or commas.",
+        ctk.CTkLabel(card, text="One process per line. Use spaces to separate values.",
                      font=FONT.small, text_color=C("muted"), wraplength=290,
                      justify="left").pack(anchor="w", padx=10, pady=(0, 5))
         self.jobs = ctk.CTkTextbox(
@@ -160,7 +160,7 @@ class PriorityApp(ctk.CTk):
         actions = ctk.CTkFrame(card, fg_color="transparent")
         actions.pack(fill="x", padx=10, pady=(12, 8))
         actions.columnconfigure((0, 1), weight=1)
-        ctk.CTkButton(actions, text="Run all four", font=FONT.bold, height=34,
+        ctk.CTkButton(actions, text="Run", font=FONT.bold, height=34,
                       fg_color=C("accent"), hover_color=C("accent_hover"),
                       command=self.run_all).grid(row=0, column=0, sticky="ew", padx=(0, 6))
         ctk.CTkButton(actions, text="Load example", font=FONT.ui, height=34,
@@ -230,7 +230,26 @@ class PriorityApp(ctk.CTk):
             count = int(self.count.get())
         except ValueError:
             count = 1
-        self.count.set(str(max(1, min(MAX_JOBS, count + delta))))
+        new_count = max(1, min(MAX_JOBS, count + delta))
+
+        # Read the current rows from the text box
+        lines = [line for line in self.jobs.get("1.0", "end").splitlines() if line.strip()]
+        used = {line.replace(",", " ").split()[0] for line in lines}
+
+        # Add rows: P1, P2, P3... skipping any ID already used
+        while len(lines) < new_count:
+            n = len(lines) + 1
+            while f"P{n}" in used:
+                n += 1
+            used.add(f"P{n}")
+            lines.append(f"P{n}   0   1   1")   # default AT=0, BT=1, Priority=1
+
+        # Remove rows from the bottom if the count went down
+        del lines[new_count:]
+
+        self.jobs.delete("1.0", "end")
+        self.jobs.insert("1.0", "\n".join(lines))
+        self.count.set(str(new_count))
 
     def load_example(self):
         self.jobs.delete("1.0", "end")

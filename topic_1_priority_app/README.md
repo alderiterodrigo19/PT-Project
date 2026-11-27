@@ -170,7 +170,7 @@ MIT License — free to use, modify, and distribute.
 
 ## 👤 Author
 
-**Rodrigo Alderite** 
-**Kirk Em Neo Legaspi**
-**Alexandra Pianar**
+**Rodrigo Alderite**   
+**Kirk Em Neo Legaspi**  
+**Alexandra Pianar**  
 **Joana Marie Pol**

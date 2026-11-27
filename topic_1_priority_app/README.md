@@ -28,12 +28,6 @@ A desktop simulator for **CPU scheduling algorithms** built as part of an Operat
 
 ---
 
-## 🖥️ Screenshots
-
-> *Add screenshots here after running the app (drag & drop into this README or place in an `assets/` folder).*
-
----
-
 ## 📦 Installation
 
 ### Prerequisites
@@ -176,7 +170,7 @@ MIT License — free to use, modify, and distribute.
 
 ## 👤 Author
 
-**Rodrigo Alderite** — Operating Systems coursework (Topic 1)  
-Universidade do Minho · 2023/2024
-
-> This project is part of the **PT-Project** repository. See the main repo for other topics.
+**Rodrigo Alderite** 
+**Kirk Em Neo Legaspi**
+**Alexandra Pianar**
+**Joana Marie Pol**
